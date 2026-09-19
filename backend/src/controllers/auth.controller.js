@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export async function register(req, res) {
-  const { username, email, password } = req.body;
+  const { name, email, password, isSeller } = req.body;
 
   const isUserAlreadyExists = await userModel.findOne({ email });
 
@@ -15,24 +15,35 @@ export async function register(req, res) {
     });
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await userModel.create({ username, email, password: hashedPassword });
+  const user = await userModel.create({
+    name,
+    email,
+    password: hashedPassword,
+    role: isSeller ? "seller" : "buyer"
+  });
 
-  const emailVerificationToken = jwt.sign(
+  const token = jwt.sign(
     {
+      id: user._id,
       email: user.email,
+      role: user.role,
     },
     process.env.JWT_SECRET,
+    { expiresIn: "7d" },
   );
- res.status(201).json({
+
+  res.cookie("token", token);
+
+  res.status(201).json({
     message: "user registered successfully",
     success: true,
     user: {
       id: user._id,
-      username: user.username,
+      name: user.name,
       email: user.email,
+      role: user.role,
     },
   });
 }
@@ -50,7 +61,7 @@ export async function login(req, res) {
     })
   }
 
-  const isPasswordMatch = await user.comparePassword(password)
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
 
   if(!isPasswordMatch){
     return res.status(400).json({
@@ -60,17 +71,10 @@ export async function login(req, res) {
     })
   }
 
-  if(!user.verified) {
-    return res.status(400).json({
-      message:"Please verify your email before logging in",
-      success:false,
-      err:"Email not verified"
-    })
-  }
-
   const token = jwt.sign({
     id:user._id,
-    email:user.email
+    email:user.email,
+    role:user.role
   }, process.env.JWT_SECRET, {expiresIn:"7d"})
 
   res.cookie("token", token)
@@ -80,16 +84,17 @@ export async function login(req, res) {
     success:true,
     user:{  
       id:user._id,
-      username:user.username,
-      email:user.email
+      name:user.name,
+      email:user.email,
+      role:user.role
     }
   })
 }
 
 export async function getMe(req, res){
-  const userId = req.user.id
+  const userId = req.user._id;
 
-  const user = await userModel.findById(userId).select("-password")
+  const user = await userModel.findById(userId).select("-password");
 
   if(!user){
     return res.status(404).json({
@@ -103,5 +108,5 @@ export async function getMe(req, res){
     message:"User fetched successfully",
     success:true,
     user
-  })
+  });
 }
