@@ -104,7 +104,7 @@ function WhyUs() {
 
       {/* Background sunflower */}
       <img
-        src="/products/sunflower.png"
+        src="https://ik.imagekit.io/z6ylyjfdz/Florenza_Bloom/sunflower.png"
         alt=""
         aria-hidden="true"
         className="why-background-flower"

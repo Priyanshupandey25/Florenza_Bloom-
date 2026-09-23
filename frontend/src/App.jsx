@@ -16,10 +16,17 @@ import CustomBouquets from "./pages/CustomBouquets";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Cart from "./pages/Cart";
+import SellerDashboard from "./pages/SellerDashboard";
 
 import MouseTrail from "./components/MouseTrail";
 import PageTransition from "./components/PageTransition";
+import AuthProvider from "./providers/AuthProvider";
+import ProductProvider from "./providers/ProductProvider";
 
+
+/* =========================================
+   SCROLL TO TOP
+========================================= */
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -36,8 +43,17 @@ function ScrollToTop() {
 }
 
 
+/* =========================================
+   APP
+========================================= */
+
 function App() {
   const [cart, setCart] = useState([]);
+
+
+  /* =========================================
+     ADD TO CART
+  ========================================= */
 
   const addToCart = (product) => {
     setCart((currentCart) => [
@@ -47,6 +63,10 @@ function App() {
   };
 
 
+  /* =========================================
+     UPDATE CART QUANTITY
+  ========================================= */
+
   const updateCartQuantity = (
     productId,
     change
@@ -55,7 +75,8 @@ function App() {
       const productIndex =
         currentCart.findIndex(
           (product) =>
-            product.id === productId
+            product.id === productId ||
+            product._id === productId
         );
 
       if (productIndex === -1) {
@@ -78,11 +99,16 @@ function App() {
   };
 
 
+  /* =========================================
+     REMOVE FROM CART
+  ========================================= */
+
   const removeFromCart = (productId) => {
     setCart((currentCart) =>
       currentCart.filter(
         (product) =>
-          product.id !== productId
+          product.id !== productId &&
+          product._id !== productId
       )
     );
   };
@@ -92,89 +118,135 @@ function App() {
 
 
   return (
-    <>
+    <AuthProvider>
+
       <MouseTrail />
 
       <ScrollToTop />
 
-      <PageTransition>
-        <Routes>
+      <ProductProvider>
 
-          <Route
-            path="/"
-            element={
-              <Home
-                cartCount={cartCount}
-                onAddToCart={addToCart}
-              />
-            }
-          />
+        <PageTransition>
 
-          <Route
-            path="/collection"
-            element={
-              <Collection
-                cartCount={cartCount}
-                onAddToCart={addToCart}
-              />
-            }
-          />
+          <Routes>
 
-          <Route
-            path="/custom-bouquets"
-            element={
-              <CustomBouquets
-                cartCount={cartCount}
-              />
-            }
-          />
+            {/* =================================
+                CUSTOMER ROUTES
+            ================================= */}
 
-          <Route
-            path="/login"
-            element={
-              <Login
-                cartCount={cartCount}
-              />
-            }
-          />
+            <Route
+              path="/"
+              element={
+                <Home
+                  cartCount={cartCount}
+                  onAddToCart={addToCart}
+                />
+              }
+            />
 
-          <Route
-            path="/signup"
-            element={
-              <Signup
-                cartCount={cartCount}
-              />
-            }
-          />
 
-          <Route
-            path="/cart"
-            element={
-              <Cart
-                cart={cart}
-                onUpdateQuantity={
-                  updateCartQuantity
-                }
-                onRemoveItem={
-                  removeFromCart
-                }
-              />
-            }
-          />
+            <Route
+              path="/collection"
+              element={
+                <Collection
+                  cartCount={cartCount}
+                  onAddToCart={addToCart}
+                />
+              }
+            />
 
-          <Route
-            path="*"
-            element={
-              <Navigate
-                to="/"
-                replace
-              />
-            }
-          />
 
-        </Routes>
-      </PageTransition>
-    </>
+            <Route
+              path="/custom-bouquets"
+              element={
+                <CustomBouquets
+                  cartCount={cartCount}
+                />
+              }
+            />
+
+
+            <Route
+              path="/login"
+              element={
+                <Login
+                  cartCount={cartCount}
+                />
+              }
+            />
+
+
+            <Route
+              path="/signup"
+              element={
+                <Signup
+                  cartCount={cartCount}
+                />
+              }
+            />
+
+
+            <Route
+              path="/cart"
+              element={
+                <Cart
+                  cart={cart}
+                  onUpdateQuantity={
+                    updateCartQuantity
+                  }
+                  onRemoveItem={
+                    removeFromCart
+                  }
+                />
+              }
+            />
+
+
+            {/* =================================
+                SELLER DASHBOARD
+
+                SellerDashboard itself checks:
+                - authentication
+                - seller role
+            ================================= */}
+
+            <Route
+              path="/seller"
+              element={
+                <SellerDashboard />
+              }
+            />
+
+
+            <Route
+              path="/seller/dashboard"
+              element={
+                <SellerDashboard />
+              }
+            />
+
+
+            {/* =================================
+                FALLBACK
+            ================================= */}
+
+            <Route
+              path="*"
+              element={
+                <Navigate
+                  to="/"
+                  replace
+                />
+              }
+            />
+
+          </Routes>
+
+        </PageTransition>
+
+      </ProductProvider>
+
+    </AuthProvider>
   );
 }
 

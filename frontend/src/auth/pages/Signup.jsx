@@ -9,25 +9,20 @@ import useAuth from "../hooks/useAuth";
 function Signup({ cartCount }) {
   const pageRef = useRef(null);
   const navigate = useNavigate();
-  const { register, isAuthenticated, user } = useAuth();
+  const { register, isAuthenticated } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isSeller, setIsSeller] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (user?.role === "seller") {
-        navigate("/seller/dashboard", { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
+      navigate("/", { replace: true });
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, navigate]);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -111,14 +106,10 @@ function Signup({ cartCount }) {
         name: name.trim(),
         email: email.trim(),
         password,
-        isSeller,
       });
 
-      if (isSeller) {
-        navigate("/seller/dashboard", { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
+      // Successful registration sets cookie and user in AuthProvider -> navigate to home
+      navigate("/", { replace: true });
     } catch (err) {
       setErrorMessage(
         err.message || "Failed to create account. Please try again."
@@ -242,19 +233,6 @@ function Signup({ cartCount }) {
                 disabled={isSubmitting}
                 required
               />
-            </div>
-
-            {/* Seller Account Option */}
-            <div className="auth-seller-checkbox-row">
-              <label htmlFor="signup-seller">
-                <input
-                  id="signup-seller"
-                  type="checkbox"
-                  checked={isSeller}
-                  onChange={(e) => setIsSeller(e.target.checked)}
-                />
-                <span>Register as an Artisan Seller (Studio access)</span>
-              </label>
             </div>
 
             <button

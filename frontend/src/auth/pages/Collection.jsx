@@ -5,13 +5,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductGallery from "../components/ProductGallery";
-import useProducts from "../hooks/useProducts";
+import products from "../data/products";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function Collection({ cartCount, onAddToCart }) {
   const pageRef = useRef(null);
-  const { products, loading } = useProducts();
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -255,7 +254,7 @@ function Collection({ cartCount, onAddToCart }) {
     }, pageRef);
 
     return () => ctx.revert();
-  }, [products]);
+  }, []);
 
   const handleAddToCart = (product) => {
     if (onAddToCart) {
@@ -273,8 +272,8 @@ function Collection({ cartCount, onAddToCart }) {
       <main>
         {/* =========================================
             COLLECTION HEADER
-        ========================================= */
-}
+        ========================================= */}
+
         <section className="collection-page-header">
           <p className="collection-page-label">
             ✦ THE FLORENZA COLLECTION
@@ -302,8 +301,8 @@ function Collection({ cartCount, onAddToCart }) {
 
         {/* =========================================
             PRODUCTS
-        ========================================= */
-}
+        ========================================= */}
+
         <section className="collection-products">
           {products.map((product, index) => (
             <article

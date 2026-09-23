@@ -158,7 +158,7 @@ function Hero() {
         </p>
 
         <a
-          href="#bouquets"
+          href="/collection"
           className="hero-button"
         >
           EXPLORE BOUQUETS

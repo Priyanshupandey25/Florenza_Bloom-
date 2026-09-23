@@ -12,6 +12,7 @@ import {
 } from "react-router";
 
 import gsap from "gsap";
+import useAuth from "../hooks/useAuth";
 
 function Navbar({ cartCount = 0 }) {
   const [scrolled, setScrolled] = useState(false);
@@ -22,6 +23,7 @@ function Navbar({ cartCount = 0 }) {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
 
   /* ========================================
      SCROLL EFFECT
@@ -115,9 +117,8 @@ function Navbar({ cartCount = 0 }) {
   return (
     <header
       ref={navbarRef}
-      className={`stitch-navbar ${
-        scrolled ? "navbar-scrolled" : ""
-      }`}
+      className={`stitch-navbar ${scrolled ? "navbar-scrolled" : ""
+        }`}
     >
 
       {/* ========================================
@@ -127,8 +128,7 @@ function Navbar({ cartCount = 0 }) {
       <NavLink
         to="/"
         className={({ isActive }) =>
-          `brand ${
-            isActive ? "brand-active" : ""
+          `brand ${isActive ? "brand-active" : ""
           }`
         }
         onClick={() => setMobileOpen(false)}
@@ -142,17 +142,15 @@ function Navbar({ cartCount = 0 }) {
       ======================================== */}
 
       <nav
-        className={`nav-links ${
-          mobileOpen ? "mobile-open" : ""
-        }`}
+        className={`nav-links ${mobileOpen ? "mobile-open" : ""
+          }`}
       >
 
         <NavLink
           to="/"
           end
           className={({ isActive }) =>
-            `nav-link ${
-              isActive ? "active" : ""
+            `nav-link ${isActive ? "active" : ""
             }`
           }
           onClick={() => setMobileOpen(false)}
@@ -164,8 +162,7 @@ function Navbar({ cartCount = 0 }) {
         <NavLink
           to="/collection"
           className={({ isActive }) =>
-            `nav-link ${
-              isActive ? "active" : ""
+            `nav-link ${isActive ? "active" : ""
             }`
           }
           onClick={() => setMobileOpen(false)}
@@ -177,8 +174,7 @@ function Navbar({ cartCount = 0 }) {
         <NavLink
           to="/custom-bouquets"
           className={({ isActive }) =>
-            `nav-link ${
-              isActive ? "active" : ""
+            `nav-link ${isActive ? "active" : ""
             }`
           }
           onClick={() => setMobileOpen(false)}
@@ -195,19 +191,39 @@ function Navbar({ cartCount = 0 }) {
 
       <div className="navbar-actions">
 
-        {/* LOGIN / SIGNUP */}
+        {/* LOGIN / SIGNUP / USER STATE */}
 
-        <NavLink
-          to="/login"
-          className={({ isActive }) =>
-            `navbar-auth-link ${
-              isActive ? "active" : ""
-            }`
-          }
-          onClick={() => setMobileOpen(false)}
-        >
-          Login / Signup
-        </NavLink>
+        {isAuthenticated && user ? (
+          <div className="navbar-auth-user">
+            {user.role === "seller" && (
+              <NavLink to="/seller/dashboard" className="navbar-seller-badge-link">
+                Studio
+              </NavLink>
+            )}
+            <button
+              type="button"
+              className="navbar-logout-btn"
+              onClick={async () => {
+                setMobileOpen(false);
+                await logout();
+                navigate("/login");
+              }}
+            >
+              LOGOUT
+            </button>
+          </div>
+        ) : (
+          <NavLink
+            to="/login"
+            className={({ isActive }) =>
+              `navbar-auth-link ${isActive ? "active" : ""
+              }`
+            }
+            onClick={() => setMobileOpen(false)}
+          >
+            Login / Signup
+          </NavLink>
+        )}
 
         {/* ========================================
             CART
@@ -268,11 +284,10 @@ function Navbar({ cartCount = 0 }) {
 
         <button
           type="button"
-          className={`menu-button ${
-            mobileOpen
+          className={`menu-button ${mobileOpen
               ? "menu-active"
               : ""
-          }`}
+            }`}
           onClick={toggleMobileMenu}
           aria-label={
             mobileOpen

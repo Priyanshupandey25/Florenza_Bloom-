@@ -5,11 +5,10 @@ import ProductGrid from "../components/ProductGrid";
 import WhyUs from "../components/WhyUs";
 import Reviews from "../components/Reviews";
 import Footer from "../components/Footer";
-import useProducts from "../hooks/useProducts";
+
+import products from "../data/products";
 
 function Home({ cartCount, onAddToCart }) {
-  const { products } = useProducts();
-
   return (
     <>
       <Navbar cartCount={cartCount} />

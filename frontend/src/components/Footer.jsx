@@ -39,67 +39,62 @@ function Footer() {
 
   return (
     <footer className="footer" ref={footerRef}>
-
       <div className="footer-main">
-
         {/* Brand */}
         <div className="footer-brand">
-
           <h2>
             <span>✿</span> Florenza Bloom
           </h2>
 
-          <p>
-            Handmade flowers that never fade.
-          </p>
+          <p>Handmade flowers that never fade.</p>
 
           <p className="footer-note">
-            Crafted with patience, creativity<br />
+            Crafted with patience, creativity
+            <br />
             and a little bit of love.
           </p>
-
         </div>
-
 
         {/* Explore */}
         <div className="footer-column">
-
           <h4>Explore</h4>
 
-          <a href="#home">Home</a>
-          <a href="#bouquets">Bouquets</a>
-          <a href="#story">Our Story</a>
-          <a href="#reviews">Reviews</a>
-
+          <a href="/">Home</a>
+          <a href="/collection">Our Collection</a>
+          <a href="/custom-bouquets">Custom Bouquets</a>
         </div>
-
 
         {/* Contact */}
         <div className="footer-column">
-
           <h4>Connect</h4>
 
-          <a href="#">Instagram</a>
-          <a href="#">WhatsApp</a>
-          <a href="#">Email</a>
+          <a
+            href="https://www.instagram.com/florenza.bloom_/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Instagram
+          </a>
 
+          <a
+            href="https://wa.me/919987998625"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WhatsApp
+          </a>
+
+          <a href="mailto:pandeypriyanshu7890@gmail.com">Email</a>
         </div>
-
       </div>
 
-
       <div className="footer-bottom">
-
-        <span>
-          © 2026 Florenza Bloom
-        </span>
+        <span>© 2026 Florenza Bloom</span>
 
         <span>
           Handmade with <span className="footer-heart">♥</span>
         </span>
-
       </div>
-
     </footer>
   );
 }
