@@ -109,7 +109,7 @@ function Intro() {
         <div className="intro-image-frame">
 
           <img
-            src="\products\bouquet-lavender\bouquet-lavender-1.png"
+            src="https://ik.imagekit.io/z6ylyjfdz/Florenza_Bloom/bouquet-lavender-1.png_Cwd4Ev7vt.png?updatedAt=1790103529242"
             alt="Handcrafted pipe cleaner bouquet"
             className="intro-image"
           />
