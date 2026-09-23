@@ -139,3 +139,39 @@ export const updateProduct = async (req, res) => {
     });
   }
 };
+
+//product delete
+export const productDelete = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const seller = req.user;
+
+    // Find product and make sure it belongs to the logged-in seller
+    const product = await productModel.findOne({
+      _id: id,
+      seller: seller._id,
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found or you are not authorized to delete it",
+        success: false,
+      });
+    }
+    await productModel.deleteOne({
+  _id: id,
+  seller: seller._id,
+});
+
+    res.status(200).json({
+      message: "Product deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error during product deletion:", error);
+    res.status(500).json({
+      message: "Unable to delete product",
+      success: false,
+    });
+  }
+};

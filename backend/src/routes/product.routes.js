@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {authenticateSeller} from "../middlewares/auth.middleware.js";
-import { createProduct, getProductsSeller, getAllProducts, getProductDetails, updateProduct } from "../controllers/product.controller.js";
+import { createProduct, getProductsSeller, getAllProducts, getProductDetails, updateProduct, productDelete} from "../controllers/product.controller.js";
 import multer from "multer";
 
 // Multer configuration for file uploads
@@ -38,5 +38,10 @@ router.get("/detail/:id", getProductDetails);
 //description: Update product details by ID
 //access Private (Seller only)
 router.put("/update/:id", authenticateSeller, upload.array("images", 5), updateProduct);
+
+//@route POST /api/products/delete/:id
+//description: Delete a product by ID
+//access Private (Seller only)
+router.post("/delete/:id", authenticateSeller, productDelete);
 
 export default router;
