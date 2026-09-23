@@ -244,19 +244,6 @@ function Signup({ cartCount }) {
               />
             </div>
 
-            {/* Seller Account Option */}
-            <div className="auth-seller-checkbox-row">
-              <label htmlFor="signup-seller">
-                <input
-                  id="signup-seller"
-                  type="checkbox"
-                  checked={isSeller}
-                  onChange={(e) => setIsSeller(e.target.checked)}
-                />
-                <span>Register as an Artisan Seller (Studio access)</span>
-              </label>
-            </div>
-
             <button
               type="submit"
               className="auth-submit-button"
